@@ -1,17 +1,167 @@
 ---
-title: "About Me"
-about:
-  id: me
-  template: broadside
-  image: img/profile.png
+title: "Distribuciones de frecuencias"
+subtitle: "Tablas y Gráficas"
+date: today 
+author: 
+  - name: Cristian Cerquera Williams <br> David Mauricio Garzón Florez 
+    affiliation: Universidad del Tolima
+    affiliation-url: https://www.ut.edu.co/
+title-block-banner: "#B48900"
+lang: es
+# botón TAB
+format: 
+  html:
+    toc: true #arma menu
+    number-sections: true # numera secciones del menu
+    code-fold: true #oculta el codigo
+    code-summary: "Ver código" #leyenda para mostrar codigo
+    html-math-method: katex
+    smooth-scroll: true #protip, enlentece el scroll
+    #link-external-icon: true # muestra iconos en los links
+    link-external-newwindow: true #abre links en una pestaña nueva
+    citations-hover: true # muestra citas
+    footnotes-hover: true # muestra notas al pie
+    theme: flatly
+editor: visual
+knitr:
+  opts_chunk: 
+    message: false
+    warning: false
+    fig.align: "centre"
+bibliography: references.bib
 ---
 
-::: {#me}
-## Goals
+```{=html}
+<style type="text/css">
+ .tab{ text-indent: 40px; }
+ body{ font-size: 130%; }
+body {text-align: justify}
+</style>
+```
+# Paquetes a instalar
 
-## Education
+**install.packages("tidyverse")**
 
-## Experience
-:::
+**install.packages("kableExtra")**
 
-Thanks
+**install.packages("agricolae")**
+
+**install.packages("RColorBrewer")**
+
+# Activar paquetes
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+library(agricolae)
+library(RColorBrewer)
+```
+
+[@tidyverse; @kableExtra; @agricolae; @RColorBrewer]
+
+Introducción: Las distribuciones de frecuencia son herramientas fundamentales en estadística y análisis de datos para organizar y resumir información. Nos permiten visualizar cuántas veces aparece cada valor diferente dentro de un conjunto de datos.
+
+## Tipos de distribuciones de frecuencia
+
+**Funcionamiento** Las distribuciones de frecuencia son herramientas fundamentales en estadística y análisis de datos para organizar y resumir información. Nos permiten visualizar cuántas veces aparece cada valor diferente dentro de un conjunto de datos.
+
+**Funcionamiento** Imagine un conjunto de datos con las edades de los estudiantes en una clase. Una distribución de frecuencia agruparía estas edades, contando cuántos estudiantes pertenecen a cada grupo de edad.
+
+Existen diversas formas de presentar una distribución de frecuencia:
+
+-   Tablas: Listan los valores únicos y sus frecuencias correspondientes.
+
+-   Gráficos: Representan visualmente la información, como histogramas, polígonos de frecuencia o diagramas de sectores.
+
+**Utilidad**
+
+Las distribuciones de frecuencia son versátiles y ofrecen múltiples beneficios:
+
+-   Identificar patrones: Revelan si los datos se agrupan alrededor de ciertos valores o si existen valores atípicos.
+-   Comparar grupos: Permiten comparar las distribuciones de frecuencia de distintos grupos para identificar diferencias significativas.
+-   Comprender la forma de los datos: Observar si los datos son simétricos, sesgados o presentan otra forma particular.
+-   Base para análisis adicionales: Sirven como punto de partida para calcular medidas de tendencia central (media, mediana, moda) y de dispersión (varianza, desviación estándar).
+
+## Tipos de distribuciones de frecuencia
+
+**Frecuencia absoluta(ni)**:
+
+¿Qué es? Simplemente cuenta cuántas veces aparece un valor específico dentro del conjunto de datos. - Ejemplo: Si en una clase hay 5 estudiantes con 20 años, la frecuencia absoluta para la edad de 20 años es 5. - Utilidad: Nos da una idea clara de la popularidad de cada valor.
+
+**Frecuencia relativa(hi)**:
+
+-   ¿Qué es? Expresa la frecuencia absoluta como una proporción o porcentaje del total de datos. Se calcula dividiendo la frecuencia absoluta de un valor entre el número total de datos.
+
+-   Ejemplo: Si hay 25 estudiantes en total, la frecuencia relativa para la edad de 20 años (con 5 estudiantes) sería 5/25 = 0.2 o 20%.
+
+-   Utilidad: Permite comparar la frecuencia de valores entre diferentes conjuntos de datos, incluso si tienen tamaños distintos.
+
+**Frecuencia absoluta acumulada(Ni)**:
+
+-   ¿Qué es? Suma las frecuencias absolutas hasta un cierto punto. Es decir, nos dice cuántos valores son menores o iguales a un valor específico.
+
+-   Ejemplo: Si las edades en la clase son 20, 21, 22 y 23, la frecuencia acumulada para la edad de 21 años sería la suma de las frecuencias de 20 y 21 años.
+
+-   Utilidad: Ayuda a entender la distribución de los datos y a determinar cuántos valores se encuentran por debajo de cierto límite.
+
+**Frecuencia relativa acumulada(Hi)**:
+
+-   Qué es? Similar a la frecuencia absoluta acumulada, pero expresada como proporción o porcentaje. Se calcula dividiendo la frecuencia absoluta acumulada entre el número total de datos.
+
+-   Ejemplo: Usando el ejemplo anterior, la frecuencia relativa acumulada para la edad de 21 años sería la proporción de estudiantes con 21 años o menos en relación al total de estudiantes.
+
+-   Utilidad: Permite comparar la distribución de datos entre diferentes conjuntos y analizar la proporción de valores que se encuentran por debajo de cierto límite.
+
+# Leer la base de datos
+
+```{r}
+BASE <-  read.table("Mascotas1.csv", sep = ";", header = TRUE)
+```
+
+## Mostrar las primeras filas
+
+```{r}
+head(BASE)
+```
+
+**Asignar las categorías a las variables cualitativas**
+
+```{r}
+BASE <- transform(BASE, Mascota=factor(Mascota, labels = c("Perro", "Gato", "Pájaro", "Pez", "Hámster", "Reptil")))
+
+```
+
+## Mostrar las primeras filas con transformaciones
+
+```{r}
+head(BASE)
+```
+
+## Tabla de frecuencia de la variable sexo
+
+```{r}
+FrecAbs1 <- table(BASE$Frecuencia)
+FrecAbs1
+
+FrecRel1 <- round(prop.table(FrecAbs1), 4)
+FrecRel1
+
+FrecRelP1 <- FrecRel1*100
+FrecRelP1
+```
+
+### Concatenar las frecuencias
+
+### Cambiar nombre de columnas de la tabla
+
+### Presentar tabla con formato
+
+## Cruce de variables cualitativas
+
+# Gráficas
+
+## Diagramas de barras en una sola fila
+
+## Diagrama de sectores frecuencias absolutas
+
+## Histograma a partir de datos agrupados
